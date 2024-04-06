@@ -1,0 +1,8 @@
+future==1.0.0
+iso8601==2.1.0
+numpy==1.26.4
+python-editor==1.0.4
+python-mpv==0.4.5
+pytz==2024.1
+PyYAML==6.0.1
+serial==0.0.97
