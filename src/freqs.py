@@ -1,6 +1,7 @@
 import serial
 import time
 import numpy as np
+import wave
 
 FREQ = 8000
 RATE = 9600
@@ -24,3 +25,16 @@ class Song:
             ser.write(bytes(batch))
             time.sleep(1)
 
+def test(file='files/speech.pcm'):
+    "Test"
+    with wave.open(file, 'rb') as pcmfile:
+        nchannels = pcmfile.getnchannels()
+        nframes = pcmfile.getnframes()
+        pcm_data = pcmfile.readframes(nframes)
+
+    audio_data = np.frombuffer(pcm_data, dtype=np.int16)
+    audio_data = audio_data.reshape(-1, nchannels)
+    return audio_data
+
+tmp = Song(test())
+tmp.run()
