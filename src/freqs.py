@@ -10,7 +10,7 @@ RATE = 9600
 class Song:
     "Song"
     def __init__(self, arr: np.array):
-        self.m_freq_arr = np.arange(0, np.ceil(len(arr)), dtype=np.array)
+        self.m_freq_arr = np.arange(0, np.ceil(len(arr)), dtype=np.ndarray)
         for i, el in enumerate(arr):
             if i % FREQ == 0:
                 np.append(self.m_freq_arr, np.array([])) # next batch
@@ -27,13 +27,13 @@ class Song:
 
 def test(file='files/speech.pcm'):
     "Test"
-    with wave.open(file, 'rb') as pcmfile:
-        nchannels = pcmfile.getnchannels()
-        nframes = pcmfile.getnframes()
-        pcm_data = pcmfile.readframes(nframes)
+    with open(file, 'rb') as pcmfile:
+        pcm_data = pcmfile.read()
 
     audio_data = np.frombuffer(pcm_data, dtype=np.int16)
-    audio_data = audio_data.reshape(-1, nchannels)
+    audio_data = audio_data.reshape(-1, 1)
+    
+    print(audio_data)
     return audio_data
 
 tmp = Song(test())
