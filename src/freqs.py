@@ -2,19 +2,25 @@ import serial
 import time
 import numpy as np
 
-# Open serial port
-ser = serial.Serial('/dev/ttyUSB0', 9600)  # Change port as per your system
+FREQ = 8000
+RATE = 9600
 
 # Define array of frequencies (example)
 class Song:
-    def __init__(self, ):
-        m_freq_arr = None
-        
+    "Song"
+    def __init__(self, arr: np.array):
+        self.m_freq_arr = np.arange(0, np.ceil(len(arr)), dtype=np.array)
+        for i, el in enumerate(arr):
+            if i % FREQ == 0:
+                np.append(self.m_freq_arr, np.array([])) # next batch
+            np.append(self.m_freq_arr[-1], el) # add freq to batch
+    
+    def run(self):
+        "Run"
+        ser = serial.Serial('/dev/ttyUSB0', 9600)
+        if not ser.is_open:
+            ser.open()
+        for batch in self.m_freq_arr:
+            ser.write(bytes(batch))
+            time.sleep(1)
 
-
-frequencies = [440, 494, 523, 587, 659, 698, 784, 880]
-
-# Send frequencies to Nucleo board
-for frequency in frequencies:
-    ser.write(str(frequency).encode())
-    time.sleep(0.5)  # Adjust as needed
