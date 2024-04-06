@@ -1,0 +1,8 @@
+- add note labels
+- enable writing notes above and below
+- enable playing the created melody in the browser
+- add exporting into the melody format
+- add importing the melody from the file format
+- (maybe) add direct sending of melody to our quantum motherboard
+- (maybe) QoL: selecting multiple notes, dragging them around
+- (maybe) QoL: highlight a selected scale
