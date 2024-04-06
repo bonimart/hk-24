@@ -46,7 +46,13 @@ Documentation is a crucial part of every project, but also maybe during the hack
 
 ## Contributors ✨
 
-Thanks go to these wonderful people
+Thanks go to these wonderful people:
+
+- Martin Beneš
+- Petr Fiedler
+- Martin Vidmar
+- Tomáš Novotný
+
 <!--
 Here, you can show off all your cool teammates with whom you created this project.
 If you want to automate it, you can use a cool bot: https://allcontributors.org/
