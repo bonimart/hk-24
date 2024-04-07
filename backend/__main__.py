@@ -1,6 +1,15 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
+import serial
+import time
+import numpy as np
+import wave
+import soundfile as sf
+
+FREQ = 8000
+RATE = 9600
+
 app = Flask(__name__)
 CORS(app) 
 
@@ -11,9 +20,24 @@ available_tracks = {
     3: "Track 3"
 }
 
+def SendSong(track):
+    "Run"
+    ser = serial.Serial('/dev/ttyACM0', 9600)
+    if not ser.is_open:
+        ser.open()
+    
+    ser.write(bytes("play song"))
+    ser.write(bytes(int(len(track))))
+    for instr in track:
+        tone, start, duration = instr["frequency"], instr["startTimeMs"], instr["duration"]
+        ser.write(bytes(int(tone)))
+        ser.write(bytes(int(start)))
+        ser.write(bytes(int(duration)))
+
 @app.route('/play-music', methods=['POST'])
 def play_music():
     music_notes = request.json.get('music_notes')
+    SendSong(music_notes)
     return jsonify({"message": "Not implemented yet"}), 501
 
 
@@ -30,5 +54,8 @@ def play_selected_track(track_id):
         return jsonify({"error": "Track not found."}), 404
 
 
+
 if __name__ == '__main__':
     app.run(debug=True)
+
+
