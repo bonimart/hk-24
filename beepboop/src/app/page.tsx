@@ -4,8 +4,9 @@ import { MelodyMaker } from "@/components/MelodyMaker";
 
 export default function Home() {
     return (
-        <div style={{ textAlign: "center", marginTop: "3cm" }}>
+        <main>
+            <h1>BeepBoop</h1>
             <MelodyMaker />
-        </div>
+        </main>
     );
 }

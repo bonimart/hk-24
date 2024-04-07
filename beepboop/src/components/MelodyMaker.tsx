@@ -4,6 +4,8 @@ import { MelodyDisplay } from "@/components/MelodyDisplay";
 import { MELODY_SIZE } from "@/constants";
 import { useState, useRef, useEffect } from "react";
 import { Melody } from "@/melody";
+import { Button } from "@/components/Button";
+import { CiPlay1 } from "react-icons/ci";
 
 function getNoteLabel(note: number): string {
     const letter = [
@@ -86,6 +88,10 @@ export const MelodyMaker = () => {
                 onMouseLeave={(t) => {}}
             />
             {/* {new Array(100).fill(0).map((_, i) => <div key={i}>{getNoteLabel(i)}</div>)} */}
+            <Button>
+                <CiPlay1 />
+                Play
+            </Button>
         </>
     );
 };
