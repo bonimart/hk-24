@@ -6,7 +6,7 @@ import { useState, useRef, useEffect } from "react";
 import { Melody } from "@/melody";
 import { Button } from "@/components/Button";
 import { NumberInput } from "./NumberInput";
-import { CiMusicNote1, CiPlay1, CiTrash } from "react-icons/ci";
+import { CiMusicNote1, CiPlay1, CiStop1, CiTrash } from "react-icons/ci";
 import { melodySerialize } from "@/melodyFormat";
 import { inBrowserPlay } from "@/inBrowserPlay";
 
@@ -76,19 +76,28 @@ export const MelodyMaker = () => {
             />
             <div style={{ display: "flex" }}>
                 <NumberInput value={bpm} onChange={val => setBpm(val)} label="BPM" />
-                <Button onClick={
-                    () => {
-                        if (audioContext != null) {
-                            audioContext.close();
+                {audioContext == null ?
+                    <Button
+                        onClick={
+                            () => setAudioContext(
+                                inBrowserPlay(melodySerialize(melody, 60000 / bpm, 440 * Math.pow(Math.pow(2, 1/12), -5)))
+                            )
                         }
-                        setAudioContext(
-                            inBrowserPlay(melodySerialize(melody, 60000 / bpm, 440 * Math.pow(Math.pow(2, 1/12), -5)))
-                        );
-                    }
-                }>
-                    <CiMusicNote1 />
-                    Test
-                </Button>
+                    >
+                        <CiMusicNote1 />
+                        Test
+                    </Button> : <Button
+                        onClick={
+                            () => {
+                                audioContext.close();
+                                setAudioContext(null);
+                            }
+                        }
+                    >
+                        <CiStop1 />
+                        Stop
+                    </Button>
+                }
                 <Button onClick={
                     () => fetch(`${process.env.NEXT_PUBLIC_API_URL}/play-music`, {
                         method: "POST",
