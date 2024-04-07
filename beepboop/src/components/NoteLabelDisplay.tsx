@@ -34,7 +34,7 @@ export const NoteLabelDisplay = (props: {
     return (
         <div className="moment" style={{ width: `${4 * COL_PX}px` }}>
             {new Array(MAX_NOTE - MIN_NOTE + 1).fill(0).map((_, i) => (
-                <div className="note">{getNoteLabel(MAX_NOTE - i)}</div>
+                <div className="note" key={i}>{getNoteLabel(MAX_NOTE - i)}</div>
             ))}
             {highestNote != null && highestNote > MAX_NOTE ? (
                 <div className="upper-extension">

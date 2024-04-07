@@ -4,7 +4,9 @@ import { MIN_NOTE, MAX_NOTE, COL_PX } from "@/constants";
 
 export const MomentDisplay = (props: {
     t: number;
+    prevMoment: Moment | null;
     moment: Moment;
+    nextMoment: Moment | null;
     onMouseDown: (note: number) => void;
     onMouseUp: (note: number) => void;
     onMouseEnter: () => void;
@@ -32,6 +34,8 @@ export const MomentDisplay = (props: {
                 <Note
                     key={i}
                     hasNote={props.moment.has(MAX_NOTE - i)}
+                    prevHasNote={props.prevMoment?.has(MAX_NOTE - i) ?? false}
+                    nextHasNote={props.nextMoment?.has(MAX_NOTE - i) ?? false}
                     onMouseDown={() => props.onMouseDown(MAX_NOTE - i)}
                     onMouseUp={() => props.onMouseUp(MAX_NOTE - i)}
                 />
@@ -42,6 +46,8 @@ export const MomentDisplay = (props: {
                         <Note
                             key={i}
                             hasNote={props.moment.has(highestNote - i)}
+                            prevHasNote={props.prevMoment?.has(highestNote - i) ?? false}
+                            nextHasNote={props.nextMoment?.has(highestNote - i) ?? false}
                             onMouseDown={() =>
                                 props.onMouseDown(highestNote - i)
                             }
@@ -58,6 +64,8 @@ export const MomentDisplay = (props: {
                         <Note
                             key={i}
                             hasNote={props.moment.has(MIN_NOTE - 1 - i)}
+                            prevHasNote={props.prevMoment?.has(MIN_NOTE - 1 - i) ?? false}
+                            nextHasNote={props.nextMoment?.has(MIN_NOTE - 1 - i) ?? false}
                             onMouseDown={() =>
                                 props.onMouseDown(MIN_NOTE - 1 - i)
                             }

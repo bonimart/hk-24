@@ -6,15 +6,18 @@ import { useState, useRef, useEffect } from "react";
 import { Melody } from "@/melody";
 import { Button } from "@/components/Button";
 import { NumberInput } from "./NumberInput";
-import { CiPlay1 } from "react-icons/ci";
+import { CiMusicNote1, CiPlay1, CiTrash } from "react-icons/ci";
 import { melodySerialize } from "@/melodyFormat";
+import { inBrowserPlay } from "@/inBrowserPlay";
+
+const INITIAL_MELODY = Array.from(
+    { length: MELODY_SIZE },
+    () => new Set([])
+);
 
 export const MelodyMaker = () => {
-    const initialMelody = Array.from(
-        { length: MELODY_SIZE },
-        () => new Set([])
-    );
-    const [melody, setMelody] = useState<Set<number>[]>(initialMelody);
+
+    const [melody, setMelody] = useState<Set<number>[]>(INITIAL_MELODY);
 
     const [wipMelody, setWipMelody] = useState<Melody>(melody);
 
@@ -26,6 +29,8 @@ export const MelodyMaker = () => {
     } | null>(null);
 
     const [bpm, setBpm] = useState<number>(120);
+
+    const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
     function updateWipMelody(startT: number, endT: number, note: number) {
         let melodyCow = melody.map((set) => new Set<number>([...set]));
@@ -72,6 +77,19 @@ export const MelodyMaker = () => {
             <div style={{ display: "flex" }}>
                 <NumberInput value={bpm} onChange={val => setBpm(val)} label="BPM" />
                 <Button onClick={
+                    () => {
+                        if (audioContext != null) {
+                            audioContext.close();
+                        }
+                        setAudioContext(
+                            inBrowserPlay(melodySerialize(melody, 60000 / bpm, 440 * Math.pow(Math.pow(2, 1/12), -5)))
+                        );
+                    }
+                }>
+                    <CiMusicNote1 />
+                    Test
+                </Button>
+                <Button onClick={
                     () => fetch(`${process.env.NEXT_PUBLIC_API_URL}/play-music`, {
                         method: "POST",
                         headers: {
@@ -84,6 +102,10 @@ export const MelodyMaker = () => {
                 }>
                     <CiPlay1 />
                     Send
+                </Button>
+                <Button onClick={() => { setMelody(INITIAL_MELODY); setWipMelody(INITIAL_MELODY); }}>
+                    <CiTrash />
+                    Clear
                 </Button>
             </div>
         </>
