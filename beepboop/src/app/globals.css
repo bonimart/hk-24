@@ -32,8 +32,16 @@ body {
   }
 } */
 
+:root {
+    --clr-bg: rgb(31, 26, 44);
+    --clr-text: rgb(187, 187, 187);
+    --clr-text-intensive: rgb(255, 255, 255);
+}
+
 body {
     font-family: "Courier New", Courier, monospace;
+    background-color: var(--clr-bg);
+    color: var(--clr-text);
 }
 
 main {
@@ -47,6 +55,8 @@ main {
     position: relative;
     user-select: none;
     text-align: center;
+    font-size: 1.2vw;
+    width: 1.2vw;
 }
 
 .upper-extension {
@@ -61,11 +71,11 @@ main {
 
 .note {
     display: block;
-    color: gray;
+    color: var(--clr-text);
 }
 
 .note:hover {
-    color: black;
+    color: var(--clr-text-intensive);
     font-weight: bolder;
 }
 
@@ -82,19 +92,19 @@ h1 {
 
 .button {
     background-color: transparent;
-    border: 1px solid gray;
+    border: 1px solid var(--clr-text);
     font-size: 1.2rem;
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     cursor: pointer;
     margin: 0.5rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: gray;
+    color: var(--clr-text);
 }
 
 .button:hover {
-    color: black;
-    border-color: black;
+    color: var(--clr-text-intensive);
+    border-color: var(--clr-text-intensive);
 }

@@ -26,7 +26,6 @@ export const MomentDisplay = (props: {
     return (
         <div
             className="moment"
-            style={{ width: `${COL_PX}px` }}
             onMouseEnter={() => props.onMouseEnter()}
             onMouseLeave={() => props.onMouseLeave()}>
             {new Array(MAX_NOTE - MIN_NOTE + 1).fill(0).map((_, i) => (
