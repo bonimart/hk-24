@@ -1,6 +1,7 @@
 import { Melody } from "@/melody";
 import { forwardRef } from "react";
 import { MomentDisplay } from "./MomentDisplay";
+import { NoteLabelDisplay } from "./NoteLabelDisplay";
 
 export const MelodyDisplay = forwardRef(
     (
@@ -14,6 +15,18 @@ export const MelodyDisplay = forwardRef(
     ) => {
         return (
             <div ref={ref}>
+                <NoteLabelDisplay
+                    minNote={props.melody.reduce<number | null>(
+                        (prev, curr) => Array.from(curr).reduce(
+                            (p: number | null, c) => p != null ? Math.max(p, c) : c, null), null
+                        )
+                    }
+                    maxNote={props.melody.reduce<number | null>(
+                        (prev, curr) => Array.from(curr).reduce(
+                            (p: number | null, c) => p != null ? Math.min(p, c) : c, null), null
+                        )
+                    }
+                />
                 {props.melody.map((moment, i) => (
                     <MomentDisplay
                         key={i}
