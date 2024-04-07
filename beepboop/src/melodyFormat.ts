@@ -1,15 +1,16 @@
 
+import { MIN_NOTE } from "./constants";
 import { Melody } from "./melody";
 
-type NoteInstruction = {
+export type NoteInstruction = {
     frequency: number,
     startTimeMs: number,
     durationMs: number,
 };
 
-type MelodyFormat = NoteInstruction[];
+export type MelodyFormat = NoteInstruction[];
 
-function melodySerialize(melody: Melody, shortestNoteDurationMs: number, note0Frequency: number): MelodyFormat {
+export function melodySerialize(melody: Melody, shortestNoteDurationMs: number, note0Frequency: number): MelodyFormat {
     const result: MelodyFormat = [];
     for (let i = 0; i < melody.length; i++) {
         for (const note of melody[i]) {
@@ -25,7 +26,7 @@ function melodySerialize(melody: Melody, shortestNoteDurationMs: number, note0Fr
                 durationNotes += 1;
             }
 
-            const frequency = Math.pow(note0Frequency, note * Math.pow(2, 1 / 12));
+            const frequency = note0Frequency * Math.pow(Math.pow(2, 1 / 12), note - MIN_NOTE);
             result.push({
                 startTimeMs: i * shortestNoteDurationMs,
                 durationMs: durationNotes * shortestNoteDurationMs,

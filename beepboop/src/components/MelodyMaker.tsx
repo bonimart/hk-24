@@ -1,11 +1,12 @@
 "use client";
 
 import { MelodyDisplay } from "@/components/MelodyDisplay";
-import { MELODY_SIZE } from "@/constants";
+import { MELODY_SIZE, SHORTEST_NOTE_DURATION_MS } from "@/constants";
 import { useState, useRef, useEffect } from "react";
 import { Melody } from "@/melody";
 import { Button } from "@/components/Button";
 import { CiPlay1 } from "react-icons/ci";
+import { melodySerialize } from "@/melodyFormat";
 
 function getNoteLabel(note: number): string {
     const letter = [
@@ -45,10 +46,6 @@ export const MelodyMaker = () => {
         let melodyCow = melody.map((set) => new Set<number>([...set]));
         for (let i = Math.min(startT, endT); i <= Math.max(startT, endT); i++) {
             if (!melody[i].has(note)) {
-                if (melodyCow == melody) {
-                    melodyCow = Array.from(melodyCow);
-                }
-                melodyCow[i] = new Set(melodyCow[i]);
                 melodyCow[i].add(note);
             } else {
                 melodyCow[i].delete(note);
@@ -88,7 +85,17 @@ export const MelodyMaker = () => {
                 onMouseLeave={(t) => {}}
             />
             {/* {new Array(100).fill(0).map((_, i) => <div key={i}>{getNoteLabel(i)}</div>)} */}
-            <Button>
+            <Button onClick={
+                () => fetch(`${process.env.NEXT_PUBLIC_API_URL}/play-music`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        "music_notes": melodySerialize(melody, SHORTEST_NOTE_DURATION_MS, 440 * Math.pow(Math.pow(2, 1/12), -5))
+                    })
+                })
+            }>
                 <CiPlay1 />
                 Play
             </Button>
