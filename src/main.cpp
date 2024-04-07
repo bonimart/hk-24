@@ -183,9 +183,9 @@ void setup()
 
 
 void loop() {
-    //userInputLoop();
+    userInputLoop();
     //scaleLoop();
-    playSimpsons();
+    //playSimpsons();
 }
 
 String SONG_HEADER = "play song";
@@ -243,12 +243,12 @@ void playSimpsons(){
 void parseSong()
 {
     int length, tone, start, duration;
-    length = Serial.parseInt();
+    length = Serial.readStringUntil(DELIMITER).toInt();
     for (int i = 0; i < length; i++)
     {
-        start = Serial.parseInt();
-        duration = Serial.parseInt();
-        tone = Serial.parseInt();
+        start = Serial.readStringUntil(DELIMITER).toInt();
+        duration = Serial.readStringUntil(DELIMITER).toInt();
+        tone = Serial.readStringUntil(DELIMITER).toInt();
         tones.insert(tone, start, duration);
     }
 }
