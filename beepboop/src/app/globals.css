@@ -1,0 +1,100 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+/* 
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+} */
+
+body {
+    font-family: "Courier New", Courier, monospace;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.moment {
+    display: inline-block;
+    position: relative;
+    user-select: none;
+    text-align: center;
+}
+
+.upper-extension {
+    position: absolute;
+    bottom: 100%;
+}
+
+.lower-extension {
+    position: absolute;
+    top: 100%;
+}
+
+.note {
+    display: block;
+    color: gray;
+}
+
+.note:hover {
+    color: black;
+    font-weight: bolder;
+}
+
+h1 {
+    text-align: center;
+    font-size: 2rem;
+    padding: 2rem;
+    font-weight: inherit;
+}
+
+.center {
+    text-align: center;
+}
+
+.button {
+    background-color: transparent;
+    border: 1px solid gray;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    margin: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: gray;
+}
+
+.button:hover {
+    color: black;
+    border-color: black;
+}
