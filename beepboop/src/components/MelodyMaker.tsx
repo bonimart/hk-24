@@ -6,16 +6,18 @@ import { useState, useRef, useEffect } from "react";
 import { Melody } from "@/melody";
 import { Button } from "@/components/Button";
 import { NumberInput } from "./NumberInput";
-import { CiPlay1 } from "react-icons/ci";
+import { CiMusicNote1, CiPlay1, CiTrash } from "react-icons/ci";
 import { melodySerialize } from "@/melodyFormat";
 import { inBrowserPlay } from "@/inBrowserPlay";
 
+const INITIAL_MELODY = Array.from(
+    { length: MELODY_SIZE },
+    () => new Set([])
+);
+
 export const MelodyMaker = () => {
-    const initialMelody = Array.from(
-        { length: MELODY_SIZE },
-        () => new Set([])
-    );
-    const [melody, setMelody] = useState<Set<number>[]>(initialMelody);
+
+    const [melody, setMelody] = useState<Set<number>[]>(INITIAL_MELODY);
 
     const [wipMelody, setWipMelody] = useState<Melody>(melody);
 
@@ -84,7 +86,7 @@ export const MelodyMaker = () => {
                         );
                     }
                 }>
-                    <CiPlay1 />
+                    <CiMusicNote1 />
                     Test
                 </Button>
                 <Button onClick={
@@ -100,6 +102,10 @@ export const MelodyMaker = () => {
                 }>
                     <CiPlay1 />
                     Send
+                </Button>
+                <Button onClick={() => { setMelody(INITIAL_MELODY); setWipMelody(INITIAL_MELODY); }}>
+                    <CiTrash />
+                    Clear
                 </Button>
             </div>
         </>
