@@ -29,15 +29,15 @@ def SendSong(track):
     if not ser.is_open:
         ser.open()
 
-    ser.write(bytes((SONG_HEADER + DELIM).encode("utf-8")))
-    ser.write(bytes(len(track)))
+    ser.write((SONG_HEADER + DELIM).encode())
+    ser.write((str(len(track)) + DELIM).encode())
+    print(f"Send length of song: {len(track)}")
     for instr in track:
-        print(instr)
         tone, start, duration = instr["frequency"], instr["startTimeMs"], instr["durationMs"]
-        ser.write(bytes(int(tone)))
-        ser.write(bytes(int(start)))
-        ser.write(bytes(int(duration)))
-        print("Song not sent")
+        ser.write((str(start) + DELIM).encode())
+        ser.write((str(duration) + DELIM).encode())
+        ser.write((str(tone) + DELIM).encode())
+        print(f"Send tone: {tone}, start: {start}, duration: {duration}")
     print("Song sent")
     ser.close()
 

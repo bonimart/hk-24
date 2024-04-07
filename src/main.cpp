@@ -4,7 +4,7 @@
 
 #define buzzerPin 3
 #define TIMEOUT 60
-#define NOTE_DURATION 3000
+#define NOTE_DURATION 1000
 #define NOTE_PAUSE NOTE_DURATION * 1.30
 #define RATE 8096
 #define leftButton A1
@@ -56,16 +56,18 @@ struct Queue
 {
     unsigned length;
     unsigned playingCount;
+    uint32_t startPlayingTime;
     Tone *head;
     Queue()
     {
         length = 0;
         playingCount = 0;
+        startPlayingTime = millis();
         head = NULL;
     }
     void insert(int frequency, uint32_t startTime, int duration)
     {
-        Tone *newTone = new Tone(frequency, startTime, duration);
+        Tone *newTone = new Tone(frequency, startPlayingTime + startTime, duration);
         if (head == NULL)
         {
             head = newTone;
@@ -138,6 +140,10 @@ void playTone(int, int, float);
 void playScale();
 void scaleLoop();
 void handleKey(Key);
+void parseSerialInput();
+void parseSong();
+void playSimpsons();
+void userInputLoop();
 
 Queue tones;
 int chord[] = {NOTE_C5, NOTE_E5, NOTE_G5}; // C major triad
@@ -149,20 +155,47 @@ Key right(rightButton, NOTE_G5);
 uint32_t lastDebounceTime = 0;
 uint32_t lastReadTime = 0;
 
+int melody[] = {
+  NOTE_C4, NOTE_E4, NOTE_FS4, REST, NOTE_A4,
+  NOTE_G4, NOTE_E4, NOTE_C4, NOTE_A3,
+  NOTE_FS3, NOTE_FS3, NOTE_FS3, NOTE_G3, REST,
+  NOTE_FS3, NOTE_FS3, NOTE_FS3, NOTE_G3, NOTE_AS3,
+  NOTE_B3, REST
+};
+
+int durations[] = {
+  2, 4, 4, 32, 8,
+  2, 4, 4, 8,
+  8, 8, 8, 4, 2,
+  8, 8, 8, 4, 2,
+  2, 2
+};
+
 void setup()
 {
     pinMode(buzzerPin, OUTPUT);
     pinMode(leftButton, INPUT_PULLUP);
     pinMode(middleButton, INPUT_PULLUP);
     pinMode(rightButton, INPUT_PULLUP);
-
     tones.insert(NOTE_C5, millis(), NOTE_DURATION);
-    tones.insert(NOTE_C4, millis() + 5000, NOTE_DURATION);
     Serial.begin(9600);
 }
 
 
 void loop() {
+    //userInputLoop();
+    //scaleLoop();
+    playSimpsons();
+}
+
+String SONG_HEADER = "play song";
+char DELIMITER = ',';
+
+void userInputLoop(){
+    if (Serial.available() > 0)
+    {
+        parseSerialInput();
+    }
     if (millis() - lastReadTime > TIMEOUT)
     {
         lastReadTime = millis();
@@ -177,6 +210,49 @@ void loop() {
     tones.walk();
 }
 
+void parseSerialInput()
+{
+    String input = Serial.readStringUntil(DELIMITER);
+    if (input != SONG_HEADER)
+    {
+        return;
+    }
+    parseSong();
+    tones.startPlayingTime = millis();
+}
+
+void playSimpsons(){
+  int size = sizeof(durations) / sizeof(int);
+
+  for (int note = 0; note < size; note++) {
+    //to calculate the note duration, take one second divided by the note type.
+    //e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+    int duration = 1000 / durations[note];
+    tone(buzzerPin, melody[note], duration);
+
+    //to distinguish the notes, set a minimum time between them.
+    //the note's duration + 30% seems to work well:
+    int pauseBetweenNotes = duration * 1.30;
+    delay(pauseBetweenNotes);
+
+    //stop the tone playing:
+    noTone(buzzerPin);
+    }
+}
+
+void parseSong()
+{
+    int length, tone, start, duration;
+    length = Serial.parseInt();
+    for (int i = 0; i < length; i++)
+    {
+        start = Serial.parseInt();
+        duration = Serial.parseInt();
+        tone = Serial.parseInt();
+        tones.insert(tone, start, duration);
+    }
+}
+
 void scaleLoop() {
     playScale();
     noTone(buzzerPin);
@@ -189,18 +265,7 @@ void handleKey(Key key)
         && (millis() - lastDebounceTime) > debounceDelay)
     {
         lastDebounceTime = millis();
-        switch(key.pin)
-        {
-            case leftButton:
-                tones.insert(key.frequency, millis(), NOTE_DURATION);
-                break;
-            case middleButton:
-                tones.insert(key.frequency, millis() + 500, NOTE_DURATION);
-                break;
-            case rightButton:
-                tones.insert(key.frequency, millis() + 5000, NOTE_DURATION);
-                break;
-        }
+        tones.insert(key.frequency, millis(), NOTE_DURATION);
     }
 }
 
