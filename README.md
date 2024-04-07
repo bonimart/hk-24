@@ -1,70 +1,40 @@
-<!-- 
-This repository is to show the cool project you created.
-To make it easier to present, we created this sample, which you can edit and use for your HK project.
--->
+# Unleash Kitchen Sonic Madness
 
-![image](.template_images/Top.png)
+The Unleash Kitchen Sonic Madness project is a musical composing web application BeepBoop coupled with an embedded device communication interface, designed to enable users to create melodies and play them directly on an STM32 Nucleo-64 device.
 
-<p align="center">
-  <a href="https://hackkosice.com">
-    <img src="https://github.com/hackkosice/i-demoed-hk24/assets/41269745/156db290-9b9f-47b3-9268-3c7381081144" height="300px">
-  </a>
-</p>
+## Components:
 
-&nbsp;
+### Client Frontend Application (BeepBoop)
 
-<!--
-In the next part, we recommend displaying all important shields for your project: https://github.com/badges/shields
--->
+    Description: BeepBoop is a musical composing web app built using Next.js framework. It allows users to compose melodies using an intuitive interface.
+    Directory: beepboop
+    How to Run: Execute npm run dev to start the application.
 
-[![All Contributors](https://img.shields.io/github/contributors/hackkosice/i-demoed-hk24?style=flat-square)](https://github.com/hackkosice/i-demoed-hk24/graphs/contributors)
-[![Activity](https://img.shields.io/github/commit-activity/m/hackkosice/i-demoed-hk24?style=flat-square)](https://github.com/hackkosice/i-demoed-hk24/pulse)  
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-[![first-timers-only Friendly](https://img.shields.io/badge/first--timers--only-friendly-blue.svg)](http://www.firsttimersonly.com/)
+### Server Application
 
+    Description: The server application, located in the server directory, is developed in Python using the Flask framework. It serves as the backend for the BeepBoop application.
+    How to Run: Execute python server/app.py to run the server.
 
+### Communication Interface
 
-A quick short description of what this project is about. It should be explained in
-3 - 4 four sentences to catch the eye of the viewer of the Githu repository. 
-It can contain some technologies, and what is the outcome of the project.
+    Description: The communication interface with the embedded device is implemented in C using Arduino.h. It facilitates the transfer of melodies composed in BeepBoop to the STM32 Nucleo-64 device.
+    Directory: This component is not intended to be run directly but serves as the internal communication mechanism within the full product.
 
-![image](.template_images/Mid.png)
+## Usage:
 
+    Run the server application using python server/app.py.
+    Launch the BeepBoop web application with npm run dev.
+    Compose your melody in BeepBoop and play it directly on the STM32 Nucleo-64 device.
 
-## Other Project repositories
+Enjoy creating and playing your own melodies with BeepBoop!
 
-<!--
-If your project is constructed out of multiple Repositories, you can specify them here:
--->
-
-## Documentation
-
-<!--
-Documentation is a crucial part of every project, but also maybe during the hackathon, you did not have time to create it. We recommend coming back later and filling in this part, for example, with https://docs.github.com/en/communities/documenting-your-project-with-wikis/about-wikis
--->
-
+![image](.template_images/beepboop.png)
 
 ## Contributors ✨
 
 Thanks go to these wonderful people:
 
-- Martin Beneš
-- Petr Fiedler
-- Martin Vidmar
-- Tomáš Novotný
-
-<!--
-Here, you can show off all your cool teammates with whom you created this project.
-If you want to automate it, you can use a cool bot: https://allcontributors.org/
--->
-
-## License
-
-<!-- You can use this section to specify the license for this project under which it can be distributed. -->
-
-## Thanks
-
-<!-- You can use this section to thank people who helped you create this awesome project outside of your team -->
-
-![image](.template_images/Bot.png)
-
+-   Martin Beneš
+-   Petr Fiedler
+-   Martin Vidmar
+-   Tomáš Novotný
