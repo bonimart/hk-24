@@ -123,8 +123,8 @@ h1 {
 }
 
 .input:hover {
-    color: black;
-    border-color: black;
+    color: var(--clr-text-intensive);
+    border-color: var(--clr-text-intensive);
 }
 
 .input-label {
