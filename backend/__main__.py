@@ -63,7 +63,4 @@ def play_selected_track(track_id):
 
 
 if __name__ == '__main__':
-    # app.run(debug=True)
-    inp = {"music_notes": [{"startTimeMs": 500, "durationMs": 4000, "frequency": 622.253967444162}, {"startTimeMs": 8500, "durationMs": 5000, "frequency": 440}, {
-        "startTimeMs": 10000, "durationMs": 2500, "frequency": 349.2282314330038}, {"startTimeMs": 15500, "durationMs": 2500, "frequency": 587.3295358348153}]}
-    SendSong(inp["music_notes"])
+    app.run(debug=True)
