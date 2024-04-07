@@ -4,13 +4,13 @@
 
 #define buzzerPin 3
 #define TIMEOUT 60
-#define NOTE_DURATION 5000
+#define NOTE_DURATION 3000
 #define NOTE_PAUSE NOTE_DURATION * 1.30
-#define RATE 16192
+#define RATE 8096
 #define leftButton A1
 #define middleButton A2
 #define rightButton A3
-#define debounceDelay 10
+#define debounceDelay 30
 
 struct Key
 {
@@ -30,7 +30,8 @@ struct Tone
 {
     int frequency;
     uint32_t startTime;
-    int duration;
+    uint32_t duration;
+    bool wasPlaying;
     Tone *next;
     Tone(int f, uint32_t s, int d)
     {
@@ -38,16 +39,28 @@ struct Tone
         startTime = s;
         duration = d;
         next = NULL;
+        wasPlaying = false;
+    }
+    bool isPlaying()
+    {
+        uint32_t currentTime = millis();
+        return startTime < currentTime && currentTime < duration + startTime;
+    }
+    bool hasEnded()
+    {
+        return millis() > startTime + duration;
     }
 };
 
-struct LinkedList
+struct Queue 
 {
     unsigned length;
+    unsigned playingCount;
     Tone *head;
-    LinkedList()
+    Queue()
     {
         length = 0;
+        playingCount = 0;
         head = NULL;
     }
     void insert(int frequency, uint32_t startTime, int duration)
@@ -63,6 +76,10 @@ struct LinkedList
             head = newTone;
         }
         length++;
+        if(newTone->isPlaying())
+        {
+            playingCount++;
+        }
     }
     void walk()
     {
@@ -70,7 +87,7 @@ struct LinkedList
         Tone *prev = NULL;
         while (current != NULL)
         {
-            if (millis() - current->startTime > current->duration)
+            if (current->hasEnded())
             {
                 if (prev == NULL)
                 {
@@ -82,19 +99,28 @@ struct LinkedList
                 }
                 current = current->next;
                 delete current;
+                playingCount = playingCount <= 0 ? 0 : playingCount - 1;
                 length = length <= 0 ? 0 : length - 1;
             }
             else
             {
-                tone(buzzerPin, current->frequency, RATE/length);
+                if (current->isPlaying())
+                {
+                    if (!current->wasPlaying)
+                    {
+                        current->wasPlaying = true;
+                        playingCount++;
+                    }
+                    tone(buzzerPin, current->frequency, RATE/(1000*playingCount));
+                }
                 current = current->next;
                 prev = current;
-                delayMicroseconds(RATE/length);
+                delayMicroseconds(RATE/playingCount);
             }
         }
         noTone(buzzerPin);
     }
-    ~LinkedList()
+    ~Queue()
     {
         Tone *current = head;
         Tone *next = NULL;
@@ -113,7 +139,7 @@ void playScale();
 void scaleLoop();
 void handleKey(Key);
 
-LinkedList tones;
+Queue tones;
 int chord[] = {NOTE_C5, NOTE_E5, NOTE_G5}; // C major triad
 
 Key left(leftButton, NOTE_C5);
@@ -129,6 +155,9 @@ void setup()
     pinMode(leftButton, INPUT_PULLUP);
     pinMode(middleButton, INPUT_PULLUP);
     pinMode(rightButton, INPUT_PULLUP);
+
+    tones.insert(NOTE_C5, millis(), NOTE_DURATION);
+    tones.insert(NOTE_C4, millis() + 5000, NOTE_DURATION);
     Serial.begin(9600);
 }
 
@@ -140,7 +169,6 @@ void loop() {
         left.pressed = digitalRead(left.pin) == LOW;
         middle.pressed = digitalRead(middle.pin) == LOW;
         right.pressed = digitalRead(right.pin) == LOW;
-        Serial.println(tones.length);
     }
     handleKey(left);
     handleKey(middle);
@@ -160,8 +188,19 @@ void handleKey(Key key)
     if (key.pressed && digitalRead(key.pin) == HIGH
         && (millis() - lastDebounceTime) > debounceDelay)
     {
-        tones.insert(key.frequency, millis(), NOTE_DURATION);
         lastDebounceTime = millis();
+        switch(key.pin)
+        {
+            case leftButton:
+                tones.insert(key.frequency, millis(), NOTE_DURATION);
+                break;
+            case middleButton:
+                tones.insert(key.frequency, millis() + 500, NOTE_DURATION);
+                break;
+            case rightButton:
+                tones.insert(key.frequency, millis() + 5000, NOTE_DURATION);
+                break;
+        }
     }
 }
 
