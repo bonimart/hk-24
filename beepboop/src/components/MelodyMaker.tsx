@@ -8,6 +8,7 @@ import { Button } from "@/components/Button";
 import { NumberInput } from "./NumberInput";
 import { CiPlay1 } from "react-icons/ci";
 import { melodySerialize } from "@/melodyFormat";
+import { inBrowserPlay } from "@/inBrowserPlay";
 
 export const MelodyMaker = () => {
     const initialMelody = Array.from(
@@ -26,6 +27,8 @@ export const MelodyMaker = () => {
     } | null>(null);
 
     const [bpm, setBpm] = useState<number>(120);
+
+    const [audioContext, setAudioContext] = useState<AudioContext | null>(null);
 
     function updateWipMelody(startT: number, endT: number, note: number) {
         let melodyCow = melody.map((set) => new Set<number>([...set]));
@@ -71,6 +74,19 @@ export const MelodyMaker = () => {
             />
             <div style={{ display: "flex" }}>
                 <NumberInput value={bpm} onChange={val => setBpm(val)} label="BPM" />
+                <Button onClick={
+                    () => {
+                        if (audioContext != null) {
+                            audioContext.close();
+                        }
+                        setAudioContext(
+                            inBrowserPlay(melodySerialize(melody, 60000 / bpm, 440 * Math.pow(Math.pow(2, 1/12), -5)))
+                        );
+                    }
+                }>
+                    <CiPlay1 />
+                    Test
+                </Button>
                 <Button onClick={
                     () => fetch(`${process.env.NEXT_PUBLIC_API_URL}/play-music`, {
                         method: "POST",
