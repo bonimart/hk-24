@@ -31,6 +31,8 @@ export const MelodyDisplay = forwardRef(
                     <MomentDisplay
                         key={i}
                         moment={moment}
+                        prevMoment={i > 0 ? props.melody[i - 1] : null}
+                        nextMoment={i < props.melody.length - 1 ? props.melody[i + 1] : null}
                         t={i}
                         onMouseDown={(note) => props.onMouseDown(note, i)}
                         onMouseEnter={() => props.onMouseEnter(i)}
